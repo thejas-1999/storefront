@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
 import ProductRouter from "./routes/ProductRouter.js";
+import cartRouter from "./routes/cartRouter.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", ProductRouter);
+app.use("/api/cart", cartRouter);
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
