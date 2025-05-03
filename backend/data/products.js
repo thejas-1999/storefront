@@ -32,7 +32,7 @@ const products = [
     description:
       "Track your activity and heart rate with this stylish smart watch.",
     price: 4999,
-    countInStock: 15,
+    countInStock: 0,
     specifications: [
       { label: "Brand", value: "FitPro" },
       { label: "Model Number", value: "FP-W202" },

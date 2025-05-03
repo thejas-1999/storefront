@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 
 import connectDB from "./config/db.js";
 
@@ -10,7 +9,6 @@ const app = express();
 connectDB();
 
 const port = process.env.PORT || 8000;
-const mongoUri = process.env.MONGO_URI;
 
 app.get("/", (req, res) => {
   res.send(`Hello world`);
