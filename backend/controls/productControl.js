@@ -1,11 +1,28 @@
 import Product from "../models/ProductModel.js";
 
-// @desc    Get all products
-// @route   GET /api/products
+// @desc    Get all products with optional sorting
+// @route   GET /api/products?sort=priceAsc|priceDesc|nameAsc|nameDesc
 // @access  Public
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    let sortOption = {};
+
+    switch (req.query.sort) {
+      case "priceAsc":
+        sortOption = { price: 1 };
+        break;
+      case "priceDesc":
+        sortOption = { price: -1 };
+        break;
+      case "nameAsc":
+        sortOption = { name: 1 };
+        break;
+      case "nameDesc":
+        sortOption = { name: -1 };
+        break;
+    }
+
+    const products = await Product.find().sort(sortOption);
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
