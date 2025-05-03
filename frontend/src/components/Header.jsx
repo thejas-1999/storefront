@@ -6,11 +6,11 @@ const Header = () => {
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
         <Container>
-          <Navbar.Brand href="/">Online Store</Navbar.Brand>
+          <Navbar.Brand>Online Store</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link href="/cart">
+              <Nav.Link>
                 <FaShoppingCart /> Cart
               </Nav.Link>
             </Nav>

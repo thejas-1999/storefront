@@ -1,7 +1,7 @@
 const products = [
   {
     _id: "64e78abcf001a1a5d0010001",
-    name: "Wireless Bluetooth Headphones",
+    name: "Bluetooth Headphones",
     mainImage: "/images/airpods_main.jpg",
     images: [
       "/images/airpods_1.jpg",
