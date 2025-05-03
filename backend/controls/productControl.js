@@ -1,13 +1,15 @@
 import Product from "../models/ProductModel.js";
 
-// @desc    Get all products with optional sorting
-// @route   GET /api/products?sort=priceAsc|priceDesc|nameAsc|nameDesc
+// @desc    Get all products with optional sorting and pagination
+// @route   GET /api/products?sort=priceAsc|priceDesc|nameAsc|nameDesc&page=1&limit=3
 // @access  Public
 const getProducts = async (req, res) => {
   try {
     let sortOption = {};
+    const { sort, page = 1, limit = 3 } = req.query; // Default to page 1 and limit 3
 
-    switch (req.query.sort) {
+    // Set sorting options based on the query
+    switch (sort) {
       case "priceAsc":
         sortOption = { price: 1 };
         break;
@@ -20,10 +22,29 @@ const getProducts = async (req, res) => {
       case "nameDesc":
         sortOption = { name: -1 };
         break;
+      default:
+        sortOption = {};
     }
 
-    const products = await Product.find().sort(sortOption);
-    res.json(products);
+    // Calculate the number of products to skip based on the page number
+    const skip = (page - 1) * limit;
+
+    // Get products with pagination and sorting
+    const products = await Product.find()
+      .sort(sortOption)
+      .skip(skip) // Skip the products based on the page
+      .limit(Number(limit)); // Limit the number of products per page
+
+    // Count the total number of products for pagination
+    const totalProducts = await Product.countDocuments();
+
+    // Send the paginated products and the total number of products
+    res.json({
+      products,
+      totalProducts,
+      currentPage: page,
+      totalPages: Math.ceil(totalProducts / limit),
+    });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
