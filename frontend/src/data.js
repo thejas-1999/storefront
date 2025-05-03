@@ -1,5 +1,6 @@
 const products = [
   {
+    _id: "64e78abcf001a1a5d0010001",
     name: "Wireless Bluetooth Headphones",
     mainImage: "/images/airpods_main.jpg",
     images: [
@@ -22,6 +23,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010002",
     name: "Smart Fitness Watch",
     mainImage: "/images/watch_main.jpg",
     images: [
@@ -44,6 +46,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010003",
     name: "Portable Bluetooth Speaker",
     mainImage: "/images/speaker_main.jpg",
     images: [
@@ -65,6 +68,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010004",
     name: "Noise Cancelling Earbuds",
     mainImage: "/images/earbuds_main.jpg",
     images: [
@@ -87,6 +91,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010005",
     name: "USB-C Charging Cable",
     mainImage: "/images/usb-c_main.jpg",
     images: [
@@ -108,6 +113,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010006",
     name: "Wireless Gaming Mouse",
     mainImage: "/images/mouse_main.jpg",
     images: [
@@ -129,6 +135,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010007",
     name: "Mechanical Gaming Keyboard",
     mainImage: "/images/keyboard_main.jpg",
     images: [
@@ -150,6 +157,7 @@ const products = [
     ],
   },
   {
+    _id: "64e78abcf001a1a5d0010008",
     name: "1080p HD Web Camera",
     mainImage: "/images/webcam_main.jpg",
     images: [
