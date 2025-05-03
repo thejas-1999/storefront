@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { Col, Row, Image, ListGroup, Card, Button } from "react-bootstrap";
+import { Col, Row, Image, ListGroup, Button } from "react-bootstrap";
 import products from "../data";
 
 const ProductScreen = () => {
