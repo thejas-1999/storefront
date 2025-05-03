@@ -1,0 +1,17 @@
+{
+  "name": "storefront",
+  "version": "1.0.0",
+  "description": "E-commerce store front",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon backend/server.js"
+  },
+  "keywords": [],
+  "author": "Thejas.k",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
