@@ -1,51 +1,71 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Col,
-  Row,
-  Image,
-  ListGroup,
-  Button,
-  Alert, // Import Alert component for success message
-} from "react-bootstrap";
+import { Col, Row, Image, ListGroup, Button, Alert } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { addOrUpdateCart, fetchCart } from "../slices/cartSlice";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
+  const dispatch = useDispatch();
 
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [qty, setQty] = useState(1); // Default quantity to 1
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const [qty, setQty] = useState(1);
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // Fetch product and cart data
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchData = async () => {
       try {
         const { data } = await axios.get(`/api/products/${productId}`);
         setProduct(data);
         setLoading(false);
+
+        if (cartItems.length === 0) {
+          await dispatch(fetchCart()).unwrap();
+        }
       } catch (err) {
         setError(err.response?.data?.message || "Something went wrong");
         setLoading(false);
       }
     };
 
-    fetchProduct();
-  }, [productId]);
+    fetchData();
+  }, [productId, dispatch, cartItems.length]);
 
+  useEffect(() => {
+    console.log("Cart Items:", cartItems); // Log cartItems to debug
+    if (cartItems && Array.isArray(cartItems)) {
+      const existingItem = cartItems.find(
+        (item) => item.productId && item.productId._id === productId // Check if productId is not null
+      );
+      if (existingItem) {
+        setQty(existingItem.quantity);
+      } else {
+        setQty(1);
+      }
+    } else {
+      setQty(1); // Set to 1 if cartItems is null or not an array
+    }
+  }, [cartItems, productId]);
+
+  // Handle Add to Cart
   const handleAddToCart = async () => {
     try {
-      await axios.post("/api/cart", { productId, quantity: qty });
-      setSuccessMessage("Item added to cart successfully!"); // Set success message
-      setTimeout(() => setSuccessMessage(""), 3000); // Clear the message after 3 seconds
-
-      setQty(1);
+      await dispatch(addOrUpdateCart({ productId, quantity: qty })).unwrap();
+      setSuccessMessage("Item added to cart successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+      setQty(1); // Reset quantity after adding to cart
     } catch (error) {
-      console.error("Add to cart failed", error);
+      console.error("Failed to add to cart:", error);
     }
   };
 
+  // Increase and decrease quantity
   const increaseQuantity = () => {
     if (qty < product.countInStock) {
       setQty(qty + 1);
@@ -64,86 +84,83 @@ const ProductScreen = () => {
         Back
       </Link>
 
-      {/* Success Message */}
       {successMessage && <Alert variant="success">{successMessage}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
 
-      <Row>
-        <Col md={5}>
-          <Image src={product.mainImage} alt={product.name} fluid />
+      {!loading && (
+        <Row>
+          <Col md={5}>
+            <Image src={product.mainImage} alt={product.name} fluid />
+            {product.images?.length > 0 && (
+              <Row className="mt-3">
+                {product.images.map((img, index) => (
+                  <Col xs={4} key={index}>
+                    <Image
+                      src={img}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      fluid
+                      thumbnail
+                      className="small-thumbnail"
+                    />
+                  </Col>
+                ))}
+              </Row>
+            )}
+          </Col>
 
-          {/* Thumbnails */}
-          {product.images && product.images.length > 0 && (
-            <Row className="mt-3">
-              {product.images.map((img, index) => (
-                <Col xs={4} key={index}>
-                  <Image
-                    src={img}
-                    alt={`${product.name} thumbnail ${index + 1}`}
-                    fluid
-                    thumbnail
-                    className="small-thumbnail"
-                  />
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Col>
+          <Col md={4}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h3>{product.name}</h3>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <p>{product._id}</p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Price: ₹{product.price}</strong>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                Status:{" "}
+                <strong>
+                  {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                </strong>
+              </ListGroup.Item>
 
-        <Col md={4}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h3>{product.name}</h3>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <p>{product._id}</p>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Price: ₹{product.price}</strong>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              Status:
-              <strong>
-                {product.countInStock > 0 ? " In Stock" : " Out of Stock"}
-              </strong>
-            </ListGroup.Item>
+              <ListGroup.Item>
+                <div>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={decreaseQuantity}
+                    disabled={qty <= 1}
+                  >
+                    -
+                  </Button>
+                  <span className="mx-3">{qty}</span>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={increaseQuantity}
+                    disabled={qty >= product.countInStock}
+                  >
+                    +
+                  </Button>
+                </div>
+              </ListGroup.Item>
 
-            {/* Quantity selector */}
-            <ListGroup.Item>
-              <div>
+              <ListGroup.Item>
                 <Button
-                  variant="outline-secondary"
-                  onClick={decreaseQuantity}
-                  disabled={qty <= 1}
+                  className="btn-block"
+                  type="button"
+                  disabled={product.countInStock === 0}
+                  onClick={handleAddToCart}
                 >
-                  -
+                  Add to Cart
                 </Button>
-                <span className="mx-3">{qty}</span>
-                <Button
-                  variant="outline-secondary"
-                  onClick={increaseQuantity}
-                  disabled={qty >= product.countInStock}
-                >
-                  +
-                </Button>
-              </div>
-            </ListGroup.Item>
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+        </Row>
+      )}
 
-            {/* Add to Cart Button */}
-            <ListGroup.Item>
-              <Button
-                className="btn-block"
-                type="button"
-                disabled={product.countInStock === 0}
-                onClick={handleAddToCart}
-              >
-                Add to Cart
-              </Button>
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-      </Row>
-
-      {/* Description */}
       <Row className="mt-5">
         <Col md={9}>
           <ListGroup variant="flush">
@@ -155,8 +172,7 @@ const ProductScreen = () => {
         </Col>
       </Row>
 
-      {/* Specification */}
-      {product.specifications && product.specifications.length > 0 && (
+      {product.specifications?.length > 0 && (
         <Row className="mt-4">
           <Col md={9}>
             <ListGroup variant="flush">

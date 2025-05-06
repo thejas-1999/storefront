@@ -1,54 +1,40 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import SortDropdown from "../components/SortDropdown";
 import Pagination from "../components/Pagination";
+import { fetchProducts } from "../slices/productSlice";
 
 const HomeScreen = () => {
-  const [products, setProducts] = useState([]);
-  const [sortOption, setSortOption] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(3);
+  const dispatch = useDispatch();
+
+  const { products, status, totalPages, currentPage, error } = useSelector(
+    (state) => state.product
+  );
+
+  const [sortOption, setSortOption] = React.useState("");
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get("/api/products", {
-          params: { sort: sortOption, page: currentPage, limit },
-        });
-        setProducts(data.products || []);
-        setTotalPages(data.totalPages || 1);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [sortOption, currentPage, limit]);
+    dispatch(fetchProducts({ sort: sortOption, page: currentPage, limit: 3 }));
+  }, [dispatch, sortOption, currentPage]);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
+      dispatch(fetchProducts({ sort: sortOption, page: newPage, limit: 3 }));
     }
   };
 
   return (
     <>
-      {/* Sorting Dropdown */}
       <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
 
-      {/* Loading state */}
-      {loading ? (
+      {status === "loading" ? (
         <div>Loading...</div>
+      ) : status === "failed" ? (
+        <div>Error: {error}</div>
       ) : (
         <>
-          {/* Render products only if available */}
           <Row>
             {products.length > 0 ? (
               products.map((product) => (
@@ -61,7 +47,6 @@ const HomeScreen = () => {
             )}
           </Row>
 
-          {/* Pagination Controls */}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
