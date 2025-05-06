@@ -14,6 +14,7 @@ const ProductScreen = () => {
   const [error, setError] = useState("");
   const [qty, setQty] = useState(1);
   const [successMessage, setSuccessMessage] = useState("");
+  const [mainImage, setMainImage] = useState("");
 
   const cartItems = useSelector((state) => state.cart.items);
 
@@ -24,6 +25,7 @@ const ProductScreen = () => {
         const { data } = await axios.get(`/api/products/${productId}`);
         setProduct(data);
         setLoading(false);
+        setMainImage(data.mainImage);
 
         if (cartItems.length === 0) {
           await dispatch(fetchCart()).unwrap();
@@ -90,7 +92,8 @@ const ProductScreen = () => {
       {!loading && (
         <Row>
           <Col md={5}>
-            <Image src={product.mainImage} alt={product.name} fluid />
+            <Image src={mainImage} alt={product.name} fluid />
+
             {product.images?.length > 0 && (
               <Row className="mt-3">
                 {product.images.map((img, index) => (
@@ -101,6 +104,12 @@ const ProductScreen = () => {
                       fluid
                       thumbnail
                       className="small-thumbnail"
+                      onClick={() => setMainImage(img)}
+                      style={{
+                        cursor: "pointer",
+                        border:
+                          mainImage === img ? "2px solid #007bff" : "none",
+                      }}
                     />
                   </Col>
                 ))}

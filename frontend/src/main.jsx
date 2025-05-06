@@ -7,6 +7,10 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+
+import "./assets/styles/index.css";
+import "./assets/styles/bootstrap.custom.css";
+
 import { Provider } from "react-redux";
 import store from "./store.js";
 import HomeScreen from "./screens/HomeScreen.jsx";

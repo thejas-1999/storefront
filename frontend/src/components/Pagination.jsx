@@ -1,34 +1,34 @@
-// src/components/Pagination.js
 import { Button } from "react-bootstrap";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  // Generate an array of page numbers (1, 2, 3, ..., totalPages)
   const pageNumbers = Array.from(
     { length: totalPages },
     (_, index) => index + 1
   );
 
   return (
-    <div className="pagination-controls">
+    <div className="pagination-controls d-flex justify-content-center gap-2 mt-4 flex-wrap">
       <Button
+        variant="secondary"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         Previous
       </Button>
 
-      {/* Render page numbers */}
       {pageNumbers.map((number) => (
         <Button
           key={number}
+          variant={number === currentPage ? "primary" : "outline-primary"}
           onClick={() => onPageChange(number)}
-          active={number === currentPage}
+          className="mx-1"
         >
           {number}
         </Button>
       ))}
 
       <Button
+        variant="secondary"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
