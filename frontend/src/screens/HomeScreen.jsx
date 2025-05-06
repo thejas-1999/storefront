@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
@@ -9,11 +9,12 @@ import { fetchProducts } from "../slices/productSlice";
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
-  const { products, status, totalPages, currentPage, error } = useSelector(
+  const { products, status, totalPages, error } = useSelector(
     (state) => state.product
   );
 
-  const [sortOption, setSortOption] = React.useState("");
+  const [sortOption, setSortOption] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchProducts({ sort: sortOption, page: currentPage, limit: 3 }));
@@ -21,7 +22,7 @@ const HomeScreen = () => {
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      dispatch(fetchProducts({ sort: sortOption, page: newPage, limit: 3 }));
+      setCurrentPage(newPage);
     }
   };
 
