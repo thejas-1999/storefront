@@ -160,6 +160,33 @@ const ProductScreen = () => {
           </Col>
         </Row>
       )}
+      <Row className="mt-5">
+        <Col md={9}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h3>Description</h3>
+            </ListGroup.Item>
+            <ListGroup.Item>{product.description}</ListGroup.Item>
+          </ListGroup>
+        </Col>
+      </Row>
+      {product.specifications?.length > 0 && (
+        <Row className="mt-4">
+          <Col md={9}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h3>Specifications</h3>
+              </ListGroup.Item>
+              {product.specifications.map((spec, index) => (
+                <ListGroup.Item key={index}>
+                  <strong>{spec.label}: </strong>
+                  {spec.value}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };
