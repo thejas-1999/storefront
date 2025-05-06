@@ -1,5 +1,5 @@
 import CartItem from "../models/cartModel.js";
-import Product from "../models/ProductModel.js";
+import Product from "../models/productModel.js";
 
 // @desc Add or update a cart item
 // @route POST /api/cart
