@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 
@@ -22,6 +23,19 @@ app.get("/", (req, res) => {
 
 app.use("/api/products", ProductRouter);
 app.use("/api/cart", cartRouter);
+
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
