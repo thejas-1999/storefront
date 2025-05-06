@@ -40,10 +40,10 @@ const ProductScreen = () => {
   }, [productId, dispatch, cartItems.length]);
 
   useEffect(() => {
-    console.log("Cart Items:", cartItems); // Log cartItems to debug
+    console.log("Cart Items:", cartItems);
     if (cartItems && Array.isArray(cartItems)) {
       const existingItem = cartItems.find(
-        (item) => item.productId && item.productId._id === productId // Check if productId is not null
+        (item) => item.productId && item.productId._id === productId
       );
       if (existingItem) {
         setQty(existingItem.quantity);
@@ -51,11 +51,10 @@ const ProductScreen = () => {
         setQty(1);
       }
     } else {
-      setQty(1); // Set to 1 if cartItems is null or not an array
+      setQty(1);
     }
   }, [cartItems, productId]);
 
-  // Handle Add to Cart
   const handleAddToCart = async () => {
     try {
       await dispatch(addOrUpdateCart({ productId, quantity: qty })).unwrap();

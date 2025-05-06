@@ -1,4 +1,4 @@
-import Product from "../models/ProductModel.js";
+import Product from "../models/productModel.js";
 
 // @desc    Get all products with optional sorting and pagination
 // @route   GET /api/products?sort=priceAsc|priceDesc|nameAsc|nameDesc&page=1&limit=3
@@ -6,7 +6,7 @@ import Product from "../models/ProductModel.js";
 const getProducts = async (req, res) => {
   try {
     let sortOption = {};
-    const { sort, page = 1, limit = 3 } = req.query; // Default to page 1 and limit 3
+    const { sort, page = 1, limit = 3 } = req.query;
 
     // Set sorting options based on the query
     switch (sort) {
@@ -32,9 +32,8 @@ const getProducts = async (req, res) => {
     // Get products with pagination and sorting
     const products = await Product.find()
       .sort(sortOption)
-      .skip(skip) // Skip the products based on the page
-      .limit(Number(limit)); // Limit the number of products per page
-
+      .skip(skip)
+      .limit(Number(limit));
     // Count the total number of products for pagination
     const totalProducts = await Product.countDocuments();
 
@@ -63,7 +62,6 @@ const getProductById = async (req, res) => {
       res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
-    // Handles invalid ObjectId format
     if (error.kind === "ObjectId") {
       return res.status(404).json({ message: "Product not found" });
     }
