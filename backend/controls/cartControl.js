@@ -1,5 +1,6 @@
 import CartItem from "../models/cartModel.js";
 import Product from "../models/productModel.js";
+import mongoose from "mongoose";
 
 // @desc Add or update a cart item
 // @route POST /api/cart
@@ -9,6 +10,11 @@ const addOrUpdateCartItem = async (req, res) => {
 
   if (!productId || !quantity || quantity <= 0) {
     return res.status(400).json({ message: "Invalid productId or quantity" });
+  }
+
+  // Validate ObjectId for productId
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    return res.status(400).json({ message: "Invalid Product ID" });
   }
 
   try {

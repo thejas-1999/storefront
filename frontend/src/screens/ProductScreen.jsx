@@ -40,18 +40,15 @@ const ProductScreen = () => {
   }, [productId, dispatch, cartItems.length]);
 
   useEffect(() => {
-    console.log("Cart Items:", cartItems);
     if (cartItems && Array.isArray(cartItems)) {
       const existingItem = cartItems.find(
-        (item) => item.productId && item.productId._id === productId
+        (item) => item.productId === productId
       );
       if (existingItem) {
         setQty(existingItem.quantity);
       } else {
         setQty(1);
       }
-    } else {
-      setQty(1);
     }
   }, [cartItems, productId]);
 
@@ -66,7 +63,6 @@ const ProductScreen = () => {
     }
   };
 
-  // Increase and decrease quantity
   const increaseQuantity = () => {
     if (qty < product.countInStock) {
       setQty(qty + 1);
@@ -92,7 +88,6 @@ const ProductScreen = () => {
         <Row>
           <Col md={5}>
             <Image src={mainImage} alt={product.name} fluid />
-
             {product.images?.length > 0 && (
               <Row className="mt-3">
                 {product.images.map((img, index) => (
@@ -120,9 +115,6 @@ const ProductScreen = () => {
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h3>{product.name}</h3>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <p>{product._id}</p>
               </ListGroup.Item>
               <ListGroup.Item>
                 <strong>Price: ₹{product.price}</strong>
@@ -164,35 +156,6 @@ const ProductScreen = () => {
                   Add to Cart
                 </Button>
               </ListGroup.Item>
-            </ListGroup>
-          </Col>
-        </Row>
-      )}
-
-      <Row className="mt-5">
-        <Col md={9}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h3>Description</h3>
-            </ListGroup.Item>
-            <ListGroup.Item>{product.description}</ListGroup.Item>
-          </ListGroup>
-        </Col>
-      </Row>
-
-      {product.specifications?.length > 0 && (
-        <Row className="mt-4">
-          <Col md={9}>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h3>Specifications</h3>
-              </ListGroup.Item>
-              {product.specifications.map((spec, index) => (
-                <ListGroup.Item key={index}>
-                  <strong>{spec.label}: </strong>
-                  {spec.value}
-                </ListGroup.Item>
-              ))}
             </ListGroup>
           </Col>
         </Row>

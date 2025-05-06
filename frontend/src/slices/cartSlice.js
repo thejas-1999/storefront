@@ -38,23 +38,14 @@ const cartSlice = createSlice({
       .addCase(addOrUpdateCart.fulfilled, (state, action) => {
         const updatedItem = action.payload;
 
-        // Debug log (optional)
-        console.log("Cart items before update:", state.items);
-        console.log("Incoming item:", updatedItem);
-
         const index = state.items.findIndex(
-          (item) =>
-            item?.productId?.toString?.() ===
-            updatedItem?.productId?.toString?.()
+          (item) => item.productId === updatedItem.productId
         );
 
         if (index !== -1) {
           state.items[index].quantity = updatedItem.quantity;
         } else {
-          state.items.push({
-            ...updatedItem,
-            productId: updatedItem.productId,
-          });
+          state.items.push(updatedItem);
         }
       });
   },
