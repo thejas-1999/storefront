@@ -28,7 +28,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
+      <SortDropdown onSortChange={setSortOption} />
 
       {status === "loading" ? (
         <div>Loading...</div>

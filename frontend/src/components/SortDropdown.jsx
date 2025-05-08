@@ -1,7 +1,6 @@
-// src/components/SortDropdown.js
 import { DropdownButton, Dropdown } from "react-bootstrap";
 
-const SortDropdown = ({ sortOption, onSortChange }) => {
+const SortDropdown = ({ onSortChange }) => {
   return (
     <DropdownButton
       id="dropdown-sort"

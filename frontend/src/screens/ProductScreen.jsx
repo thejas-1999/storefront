@@ -57,7 +57,7 @@ const ProductScreen = () => {
       await dispatch(addOrUpdateCart({ productId, quantity: qty })).unwrap();
       setSuccessMessage("Item added to cart successfully!");
       setTimeout(() => setSuccessMessage(""), 3000);
-      setQty(1); // Reset quantity after adding to cart
+      setQty(1);
     } catch (error) {
       console.error("Failed to add to cart:", error);
     }
@@ -122,7 +122,11 @@ const ProductScreen = () => {
               <ListGroup.Item>
                 Status:{" "}
                 <strong>
-                  {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                  {product.countInStock > 0 ? (
+                    <span>"In Stock"</span>
+                  ) : (
+                    "Out of Stock"
+                  )}
                 </strong>
               </ListGroup.Item>
 
